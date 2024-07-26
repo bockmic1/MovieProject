@@ -7,10 +7,11 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.core.io.ClassPathResource;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,37 +25,39 @@ public class EntryController {
 
     public EntryController() {
         try {
-            String path = "Movies.json"; // Relativer Pfad
-            byte[] jsonData = Files.readAllBytes(Paths.get(path));
-            ObjectMapper objectMapper = new ObjectMapper();
-            JsonNode rootNode = objectMapper.readTree(jsonData);
-            for (JsonNode node : rootNode) {
-                Movie movie = new Movie();
-                movie.setTitle(node.get("Title").asText());
-                movie.setYear(node.get("Year").asText());
-                movie.setGenre(node.get("Genre").asText());
-                movie.setDirector(node.get("Director").asText());
-    
-                // Füge Ratings hinzu
-                JsonNode ratingsNode = node.get("Ratings");
-                if (ratingsNode != null) {
-                    for (JsonNode rating : ratingsNode) {
-                        String source = rating.get("Source").asText();
-                        String value = rating.get("Value").asText();
-                        if (source.equals("Internet Movie Database")) {
-                            movie.setImdbRating(value);
-                        } else if (source.equals("Rotten Tomatoes")) {
-                            movie.setRottenTomatoesRating(value);
+            // Lade die Datei als Ressource
+            ClassPathResource resource = new ClassPathResource("Movies.json");
+            try (InputStream inputStream = resource.getInputStream()) {
+                byte[] jsonData = inputStream.readAllBytes();
+                ObjectMapper objectMapper = new ObjectMapper();
+                JsonNode rootNode = objectMapper.readTree(jsonData);
+                for (JsonNode node : rootNode) {
+                    Movie movie = new Movie();
+                    movie.setTitle(node.get("Title").asText());
+                    movie.setYear(node.get("Year").asText());
+                    movie.setGenre(node.get("Genre").asText());
+                    movie.setDirector(node.get("Director").asText());
+
+                    // Füge Ratings hinzu
+                    JsonNode ratingsNode = node.get("Ratings");
+                    if (ratingsNode != null) {
+                        for (JsonNode rating : ratingsNode) {
+                            String source = rating.get("Source").asText();
+                            String value = rating.get("Value").asText();
+                            if (source.equals("Internet Movie Database")) {
+                                movie.setImdbRating(value);
+                            } else if (source.equals("Rotten Tomatoes")) {
+                                movie.setRottenTomatoesRating(value);
+                            }
                         }
                     }
+                    movies.add(movie);
                 }
-                movies.add(movie);
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-    
 
     @GetMapping("/")
     public String index(Model model) {
