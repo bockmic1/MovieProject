@@ -27,13 +27,6 @@ test {
 
 bootJar {
     mainClass.set('org.example.demo.DemoApplication')
-}
-
-task stage(dependsOn: ['clean', 'build']) {
-    doLast {
-        copy {
-            from jar
-            into "$buildDir/libs"
-        }
-    }
+    archiveFileName.set('MisaAppProject-0.0.1-SNAPSHOT.jar')
+    destinationDirectory.set(file("$rootDir"))
 }
