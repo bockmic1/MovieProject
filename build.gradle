@@ -26,15 +26,14 @@ test {
 }
 
 bootJar {
-    mainClass.set('DemoApplication')
-    destinationDirectory.set(file("$rootDir"))
+    mainClass.set('org.example.demo.DemoApplication')
 }
 
-task stage(dependsOn: ['clean', 'bootJar']) {
+task stage(dependsOn: ['clean', 'build']) {
     doLast {
         copy {
-            from bootJar
-            into "$rootDir"
+            from jar
+            into "$buildDir/libs"
         }
     }
 }
