@@ -24,7 +24,7 @@ public class EntryController {
 
     public EntryController() {
         try {
-            String path = "C:\\MisaAppProject\\app\\src\\main\\python\\Movies.json";
+            String path = "Movies.json"; // Relativer Pfad
             byte[] jsonData = Files.readAllBytes(Paths.get(path));
             ObjectMapper objectMapper = new ObjectMapper();
             JsonNode rootNode = objectMapper.readTree(jsonData);
@@ -34,7 +34,7 @@ public class EntryController {
                 movie.setYear(node.get("Year").asText());
                 movie.setGenre(node.get("Genre").asText());
                 movie.setDirector(node.get("Director").asText());
-
+    
                 // Füge Ratings hinzu
                 JsonNode ratingsNode = node.get("Ratings");
                 if (ratingsNode != null) {
@@ -54,6 +54,7 @@ public class EntryController {
             e.printStackTrace();
         }
     }
+    
 
     @GetMapping("/")
     public String index(Model model) {
