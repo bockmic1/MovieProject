@@ -27,6 +27,8 @@ test {
 
 bootJar {
     mainClass.set('org.example.demo.DemoApplication')
+    archiveFileName.set('app-0.0.1-SNAPSHOT.jar')
+    destinationDirectory.set(file("$rootDir"))
 }
 
 task stage(dependsOn: ['clean', 'build']) {
@@ -34,9 +36,6 @@ task stage(dependsOn: ['clean', 'build']) {
         copy {
             from bootJar.archiveFile
             into "$buildDir/libs"
-            rename { fileName ->
-                fileName.replace('app-', '')
-            }
         }
     }
 }
