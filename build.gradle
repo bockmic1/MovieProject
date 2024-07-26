@@ -15,6 +15,11 @@ repositories {
 dependencies {
     implementation 'org.springframework.boot:spring-boot-starter-web'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    // Weitere Abhängigkeiten hier
+}
+
 }
 
 test {
@@ -22,13 +27,5 @@ test {
 }
 
 bootJar {
-    archiveFileName = 'MisaAppProject-0.0.1-SNAPSHOT.jar'
     mainClass.set('org.example.demo.DemoApplication')
 }
-
-task copyJar(type: Copy) {
-    from("${buildDir}/libs/MisaAppProject-0.0.1-SNAPSHOT.jar")
-    into("${rootDir}")
-}
-
-build.finalizedBy(copyJar)
