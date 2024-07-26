@@ -25,15 +25,15 @@ test {
     useJUnitPlatform()
 }
 
-task stage(dependsOn: ['clean', 'build'])
-
-jar {
-    enabled = true
-    archiveClassifier = ''
-}
-
 bootJar {
-    enabled = true
-    archiveClassifier = 'boot'
+    mainClass.set('org.example.demo.DemoApplication')
 }
 
+task stage(dependsOn: ['clean', 'build']) {
+    doLast {
+        copy {
+            from jar
+            into "$buildDir/libs"
+        }
+    }
+}
