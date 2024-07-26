@@ -1,4 +1,4 @@
-package org.example.demo;
+
 
 public class Movie {
     private String title;
